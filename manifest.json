@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+
+  "name": "Squirrel",
+  "description": "Chrome plugin for increase performance of code review on GitHub.",
+  "version": "1.0",
+  "icons": {
+    "128": "squirrel_128.png"
+  },
+  "permissions": [
+    "tabs"
+  ],
+  "background": {
+    "persistent": false,
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [{
+    "matches": ["https://*/*"],
+    "js": ["config.js", "squirrel.js"]
+  }]
+}
