@@ -7,5 +7,7 @@ var configuration = {
         {regexp: "did", message: "Please use present tense!"},
         {regexp: "will", message: "Please use present tense!"},
 
+        {regexp: "@author", message: "Do not use @author!"},
+
     ]
 }

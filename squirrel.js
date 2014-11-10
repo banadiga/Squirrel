@@ -11,6 +11,7 @@ var squirrelController = (function (){
     var COMMIT_REF = "span.commit-ref.current-branch.css-truncate.js-selectable-text.expandable";
     var COMMIT_REF_TARGET_USER = "span.css-truncate-target.user";
     var COMMIT_REF_TARGET = "span.css-truncate-target:not(.user)";
+    var ORG_NAME = "a.url.fn span[itemprop='title']";
     var REPO_NAME = "a.js-current-repository.js-repo-home-link";
     var ADD_COMMENT = "b.add-line-comment.octicon.octicon-comment-add";
     var EMPTY_CELL = "td.diff-line-num.empty-cell span.line-num-content";
@@ -72,18 +73,23 @@ var squirrelController = (function (){
         }
     };
 
-    var addCommitRefLink = function (commitRef, repoName) {
+    var addCommitRefLink = function (commitRef, orgName, repoName) {
         var targetUser = commitRef.querySelector(COMMIT_REF_TARGET_USER);
-        var targetUserLink = document.createElement("a");
-        targetUserLink.innerText = targetUser.innerText.trim();
-        targetUserLink.href = "/" +  targetUserLink.innerText + "/" + repoName;
-        targetUser.innerHTML = "";
-        targetUser.appendChild(targetUserLink);
 
+        var topLink = "/" + orgName + "/" + repoName;
+        if (targetUser != null) {
+            var targetUserLink = document.createElement("a");
+            targetUserLink.innerText = targetUser.innerText.trim();
+            topLink = "/" +  targetUser.innerText.trim()+ "/" + repoName;
+            targetUserLink.href = topLink;
+            targetUser.innerHTML = "";
+            targetUser.appendChild(targetUserLink);
+        }
         var target = commitRef.querySelector(COMMIT_REF_TARGET);
+        var targetText = (target == null)?orgName:target.innerText.trim();
         var targetLink = document.createElement("a");
         targetLink.innerText = target.innerText.trim();
-        targetLink.href = targetUserLink.href + "/tree/" + targetLink.innerText;
+        targetLink.href = topLink + "/tree/" + targetLink.innerText;
 
         target.innerHTML = "";
         target.appendChild(targetLink);
@@ -92,8 +98,9 @@ var squirrelController = (function (){
     var addCommitRefLinks = function() {
         var commitRef = document.querySelectorAll(COMMIT_REF);
         var repoName =  document.querySelector(REPO_NAME).innerText;
+        var orgName =  document.querySelector(ORG_NAME).innerText;
         for(var i = 0; i < commitRef.length; i++) {
-            addCommitRefLink(commitRef[i], repoName);
+            addCommitRefLink(commitRef[i], orgName, repoName);
         }
     };
 
